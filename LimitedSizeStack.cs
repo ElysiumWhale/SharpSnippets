@@ -1,57 +1,57 @@
-﻿using System;
-
-namespace TodoApplication
+﻿public class LimitedSizeStack<T>
 {
-    public class LimitedSizeStack<T>
+    #region Fields
+    private int _count;
+    private int _index;
+    private int _limit;
+    private T[] _data;
+    #endregion Fields
+
+    #region Properties
+    public int Count => _count;
+
+    public int Limit => _limit;
+    #endregion Properties
+
+    public LimitedSizeStack(int limit)
     {
-        private T[] _data;
-        private int _count;
-        public int Count { get => _count; }
-        private int _index;
-        private int _limit;
-        public int Limit { get => _limit; }
-        public LimitedSizeStack(int limit)
+#warning Zero size stack danger!
+        if (limit <= 0) _limit = -1;
+        else
         {
-            if (limit <= 0)
-                throw new ArgumentException("Size of stack can't be 0 or less");
+            _count = 0;
             _limit = limit;
             _data = new T[limit];
-            _count = 0;
             _index = 0;
         }
-        private void IncreaseIndex()
+    }
+
+    #region Methods
+    private void IncreaseIndex() => _index = _index == _limit - 1 ? 0 : _index++;
+
+    public void Push(T item)
+    {
+        if (_limit == -1) return;
+        if (_count != _limit)
         {
-            if (_index == _limit - 1)
-                _index = 0;
-            else
-                _index++;
+            _data[_index] = item;
+            _count++;
+            IncreaseIndex();
         }
-        public void Push(T item)
+        else if (_count == _limit)
         {
-            if (_count != _limit)
-            {
-                _data[_index] = item;
-                _count++;
-                IncreaseIndex();
-            }
-            else if (Count == _limit)
-            {
-                _data[_index] = item;
-                IncreaseIndex();
-            }
-        }
-        public T Pop()
-        {
-            if (_count == 0)
-                return default;
-            if (_index == 0)
-                _index = _limit - 1;
-            else
-                _index--;
-            T res = _data[_index];
-            _data[_index] = default;
-            _count--;
-            return res;
+            _data[_index] = item;
+            IncreaseIndex();
         }
     }
+    public T Pop()
+    {
+        if (_limit == -1) return default;
+        _index = _index == 0 ? _limit - 1 : _index--;
+        T res = _data[_index];
+        _data[_index] = default;
+        _count--;
+        return res;
+    }
+    #endregion Methods
 }
