@@ -27,7 +27,7 @@
     }
 
     #region Methods
-    private void IncreaseIndex() => _index = _index == _limit - 1 ? 0 : _index++;
+    private void IncreaseIndex() => _index = (_index == _limit - 1) ? 0 : _index + 1;
 
     public void Push(T item)
     {
@@ -47,7 +47,8 @@
     public T Pop()
     {
         if (_limit == -1) return default;
-        _index = _index == 0 ? _limit - 1 : _index--;
+        if (_count == 0) return default;
+        _index = (_index == 0) ? (_limit - 1) : _index - 1;
         T res = _data[_index];
         _data[_index] = default;
         _count--;
