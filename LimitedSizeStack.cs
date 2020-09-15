@@ -15,8 +15,10 @@
 
     public LimitedSizeStack(int limit)
     {
-#warning Zero size stack danger!
+        #warning Zero size stack danger!
         if (limit <= 0) _limit = -1;
+        // or there can be
+        // throw new ArgumentException("Size of stack can't be 0 or less");
         else
         {
             _count = 0;
@@ -44,6 +46,7 @@
             IncreaseIndex();
         }
     }
+    
     public T Pop()
     {
         if (_limit == -1) return default;
